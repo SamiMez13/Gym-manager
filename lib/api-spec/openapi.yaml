@@ -3,20 +3,40 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Gym Hub API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: branches
+    description: Gym branch operations
+  - name: trainers
+    description: Trainer operations
+  - name: members
+    description: Member operations
+  - name: classes
+    description: Gym class type operations
+  - name: schedules
+    description: Class schedule operations
+  - name: bookings
+    description: Booking operations
+  - name: membership-plans
+    description: Membership plan operations
+  - name: memberships
+    description: Member membership operations
+  - name: payments
+    description: Payment operations
+  - name: dashboard
+    description: Dashboard aggregates
+
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,13 +44,1460 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  # --- Branches ---
+  /branches:
+    get:
+      operationId: listBranches
+      tags: [branches]
+      summary: List all gym branches
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Branch"
+    post:
+      operationId: createBranch
+      tags: [branches]
+      summary: Create a branch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BranchInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Branch"
+
+  /branches/{id}:
+    get:
+      operationId: getBranch
+      tags: [branches]
+      summary: Get a branch by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Branch"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateBranch
+      tags: [branches]
+      summary: Update a branch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BranchUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Branch"
+    delete:
+      operationId: deleteBranch
+      tags: [branches]
+      summary: Delete a branch
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Trainers ---
+  /trainers:
+    get:
+      operationId: listTrainers
+      tags: [trainers]
+      summary: List all trainers
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Trainer"
+    post:
+      operationId: createTrainer
+      tags: [trainers]
+      summary: Create a trainer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainerInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+
+  /trainers/{id}:
+    get:
+      operationId: getTrainer
+      tags: [trainers]
+      summary: Get a trainer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateTrainer
+      tags: [trainers]
+      summary: Update a trainer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TrainerUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Trainer"
+    delete:
+      operationId: deleteTrainer
+      tags: [trainers]
+      summary: Delete a trainer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Members ---
+  /members:
+    get:
+      operationId: listMembers
+      tags: [members]
+      summary: List all members
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Member"
+    post:
+      operationId: createMember
+      tags: [members]
+      summary: Create a member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+
+  /members/{id}:
+    get:
+      operationId: getMember
+      tags: [members]
+      summary: Get a member by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateMember
+      tags: [members]
+      summary: Update a member
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemberUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Member"
+    delete:
+      operationId: deleteMember
+      tags: [members]
+      summary: Delete a member
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Gym Classes ---
+  /classes:
+    get:
+      operationId: listClasses
+      tags: [classes]
+      summary: List all gym class types
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/GymClass"
+    post:
+      operationId: createClass
+      tags: [classes]
+      summary: Create a gym class type
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GymClassInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GymClass"
+
+  /classes/{id}:
+    get:
+      operationId: getClass
+      tags: [classes]
+      summary: Get a gym class type by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GymClass"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateClass
+      tags: [classes]
+      summary: Update a gym class type
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GymClassUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/GymClass"
+    delete:
+      operationId: deleteClass
+      tags: [classes]
+      summary: Delete a gym class type
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Schedules ---
+  /schedules:
+    get:
+      operationId: listSchedules
+      tags: [schedules]
+      summary: List class schedules
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClassSchedule"
+    post:
+      operationId: createSchedule
+      tags: [schedules]
+      summary: Create a class schedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClassScheduleInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassSchedule"
+
+  /schedules/{id}:
+    get:
+      operationId: getSchedule
+      tags: [schedules]
+      summary: Get a class schedule by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassSchedule"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateSchedule
+      tags: [schedules]
+      summary: Update a class schedule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ClassScheduleUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClassSchedule"
+    delete:
+      operationId: deleteSchedule
+      tags: [schedules]
+      summary: Delete a class schedule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Bookings ---
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: List bookings
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get a booking by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateBooking
+      tags: [bookings]
+      summary: Update a booking (e.g. cancel)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+    delete:
+      operationId: deleteBooking
+      tags: [bookings]
+      summary: Delete a booking
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Membership Plans ---
+  /membership-plans:
+    get:
+      operationId: listMembershipPlans
+      tags: [membership-plans]
+      summary: List all membership plans
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MembershipPlan"
+    post:
+      operationId: createMembershipPlan
+      tags: [membership-plans]
+      summary: Create a membership plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MembershipPlanInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MembershipPlan"
+
+  /membership-plans/{id}:
+    get:
+      operationId: getMembershipPlan
+      tags: [membership-plans]
+      summary: Get a membership plan by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MembershipPlan"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateMembershipPlan
+      tags: [membership-plans]
+      summary: Update a membership plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MembershipPlanUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MembershipPlan"
+    delete:
+      operationId: deleteMembershipPlan
+      tags: [membership-plans]
+      summary: Delete a membership plan
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Memberships ---
+  /memberships:
+    get:
+      operationId: listMemberships
+      tags: [memberships]
+      summary: List member memberships
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Membership"
+    post:
+      operationId: createMembership
+      tags: [memberships]
+      summary: Assign membership to a member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MembershipInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Membership"
+
+  /memberships/{id}:
+    get:
+      operationId: getMembership
+      tags: [memberships]
+      summary: Get a membership by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Membership"
+        "404":
+          description: Not found
+    patch:
+      operationId: updateMembership
+      tags: [memberships]
+      summary: Update a membership
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MembershipUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Membership"
+    delete:
+      operationId: deleteMembership
+      tags: [memberships]
+      summary: Delete a membership
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Deleted
+
+  # --- Payments ---
+  /payments:
+    get:
+      operationId: listPayments
+      tags: [payments]
+      summary: List all payments
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Payment"
+    post:
+      operationId: createPayment
+      tags: [payments]
+      summary: Record a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  /payments/{id}:
+    get:
+      operationId: getPayment
+      tags: [payments]
+      summary: Get a payment by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+        "404":
+          description: Not found
+    patch:
+      operationId: updatePayment
+      tags: [payments]
+      summary: Update a payment record
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PaymentUpdate"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Payment"
+
+  # --- Dashboard (wow endpoints) ---
+  /dashboard/stats:
+    get:
+      operationId: getDashboardStats
+      tags: [dashboard]
+      summary: Get overall gym stats
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DashboardStats"
+
+  /dashboard/recent-activity:
+    get:
+      operationId: getDashboardRecentActivity
+      tags: [dashboard]
+      summary: Get recent activity feed
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ActivityItem"
+
+  /dashboard/class-utilization:
+    get:
+      operationId: getDashboardClassUtilization
+      tags: [dashboard]
+      summary: Get class utilization by class type
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ClassUtilization"
+
+  /dashboard/revenue-summary:
+    get:
+      operationId: getDashboardRevenueSummary
+      tags: [dashboard]
+      summary: Get monthly revenue summary for the past 6 months
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/RevenueMonth"
+
 components:
   schemas:
     HealthStatus:
       type: object
+      required: [status]
       properties:
         status:
           type: string
-      required:
-        - status
 
+    # Branch
+    Branch:
+      type: object
+      required: [id, name, address, phone, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: ["string", "null"]
+        capacity:
+          type: ["integer", "null"]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+
+    BranchInput:
+      type: object
+      required: [name, address, phone]
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        capacity:
+          type: integer
+        isActive:
+          type: boolean
+
+    BranchUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        address:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+        capacity:
+          type: integer
+        isActive:
+          type: boolean
+
+    # Trainer
+    Trainer:
+      type: object
+      required: [id, firstName, lastName, email, specialization, branchId, createdAt]
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: ["string", "null"]
+        specialization:
+          type: string
+        bio:
+          type: ["string", "null"]
+        branchId:
+          type: integer
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+
+    TrainerInput:
+      type: object
+      required: [firstName, lastName, email, specialization, branchId]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        specialization:
+          type: string
+        bio:
+          type: string
+        branchId:
+          type: integer
+        isActive:
+          type: boolean
+
+    TrainerUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        specialization:
+          type: string
+        bio:
+          type: string
+        branchId:
+          type: integer
+        isActive:
+          type: boolean
+
+    # Member
+    Member:
+      type: object
+      required: [id, firstName, lastName, email, phone, joinedAt, createdAt]
+      properties:
+        id:
+          type: integer
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        dateOfBirth:
+          type: ["string", "null"]
+        address:
+          type: ["string", "null"]
+        emergencyContact:
+          type: ["string", "null"]
+        isActive:
+          type: boolean
+        joinedAt:
+          type: string
+        createdAt:
+          type: string
+
+    MemberInput:
+      type: object
+      required: [firstName, lastName, email, phone]
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+        address:
+          type: string
+        emergencyContact:
+          type: string
+        isActive:
+          type: boolean
+
+    MemberUpdate:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        dateOfBirth:
+          type: string
+        address:
+          type: string
+        emergencyContact:
+          type: string
+        isActive:
+          type: boolean
+
+    # GymClass
+    GymClass:
+      type: object
+      required: [id, name, category, durationMinutes, maxCapacity, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: ["string", "null"]
+        durationMinutes:
+          type: integer
+        maxCapacity:
+          type: integer
+        difficultyLevel:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+
+    GymClassInput:
+      type: object
+      required: [name, category, durationMinutes, maxCapacity]
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+        maxCapacity:
+          type: integer
+        difficultyLevel:
+          type: string
+        isActive:
+          type: boolean
+
+    GymClassUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        durationMinutes:
+          type: integer
+        maxCapacity:
+          type: integer
+        difficultyLevel:
+          type: string
+        isActive:
+          type: boolean
+
+    # ClassSchedule
+    ClassSchedule:
+      type: object
+      required: [id, classId, trainerId, branchId, startTime, endTime, currentBookings, createdAt]
+      properties:
+        id:
+          type: integer
+        classId:
+          type: integer
+        className:
+          type: ["string", "null"]
+        trainerId:
+          type: integer
+        trainerName:
+          type: ["string", "null"]
+        branchId:
+          type: integer
+        branchName:
+          type: ["string", "null"]
+        startTime:
+          type: string
+        endTime:
+          type: string
+        status:
+          type: string
+        currentBookings:
+          type: integer
+        maxCapacity:
+          type: ["integer", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    ClassScheduleInput:
+      type: object
+      required: [classId, trainerId, branchId, startTime, endTime]
+      properties:
+        classId:
+          type: integer
+        trainerId:
+          type: integer
+        branchId:
+          type: integer
+        startTime:
+          type: string
+        endTime:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+
+    ClassScheduleUpdate:
+      type: object
+      properties:
+        classId:
+          type: integer
+        trainerId:
+          type: integer
+        branchId:
+          type: integer
+        startTime:
+          type: string
+        endTime:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+
+    # Booking
+    Booking:
+      type: object
+      required: [id, memberId, scheduleId, status, createdAt]
+      properties:
+        id:
+          type: integer
+        memberId:
+          type: integer
+        memberName:
+          type: ["string", "null"]
+        scheduleId:
+          type: integer
+        className:
+          type: ["string", "null"]
+        status:
+          type: string
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    BookingInput:
+      type: object
+      required: [memberId, scheduleId]
+      properties:
+        memberId:
+          type: integer
+        scheduleId:
+          type: integer
+        notes:
+          type: string
+
+    BookingUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        notes:
+          type: string
+
+    # MembershipPlan
+    MembershipPlan:
+      type: object
+      required: [id, name, durationDays, price, createdAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        description:
+          type: ["string", "null"]
+        durationDays:
+          type: integer
+        price:
+          type: number
+        maxClassesPerMonth:
+          type: ["integer", "null"]
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+
+    MembershipPlanInput:
+      type: object
+      required: [name, durationDays, price]
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        durationDays:
+          type: integer
+        price:
+          type: number
+        maxClassesPerMonth:
+          type: integer
+        isActive:
+          type: boolean
+
+    MembershipPlanUpdate:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        durationDays:
+          type: integer
+        price:
+          type: number
+        maxClassesPerMonth:
+          type: integer
+        isActive:
+          type: boolean
+
+    # Membership
+    Membership:
+      type: object
+      required: [id, memberId, planId, startDate, endDate, status, createdAt]
+      properties:
+        id:
+          type: integer
+        memberId:
+          type: integer
+        memberName:
+          type: ["string", "null"]
+        planId:
+          type: integer
+        planName:
+          type: ["string", "null"]
+        startDate:
+          type: string
+        endDate:
+          type: string
+        status:
+          type: string
+        createdAt:
+          type: string
+
+    MembershipInput:
+      type: object
+      required: [memberId, planId, startDate]
+      properties:
+        memberId:
+          type: integer
+        planId:
+          type: integer
+        startDate:
+          type: string
+        status:
+          type: string
+
+    MembershipUpdate:
+      type: object
+      properties:
+        planId:
+          type: integer
+        startDate:
+          type: string
+        endDate:
+          type: string
+        status:
+          type: string
+
+    # Payment
+    Payment:
+      type: object
+      required: [id, memberId, amount, type, status, createdAt]
+      properties:
+        id:
+          type: integer
+        memberId:
+          type: integer
+        memberName:
+          type: ["string", "null"]
+        membershipId:
+          type: ["integer", "null"]
+        amount:
+          type: number
+        type:
+          type: string
+        status:
+          type: string
+        method:
+          type: ["string", "null"]
+        notes:
+          type: ["string", "null"]
+        createdAt:
+          type: string
+
+    PaymentInput:
+      type: object
+      required: [memberId, amount, type]
+      properties:
+        memberId:
+          type: integer
+        membershipId:
+          type: integer
+        amount:
+          type: number
+        type:
+          type: string
+        status:
+          type: string
+        method:
+          type: string
+        notes:
+          type: string
+
+    PaymentUpdate:
+      type: object
+      properties:
+        status:
+          type: string
+        method:
+          type: string
+        notes:
+          type: string
+
+    # Dashboard aggregates
+    DashboardStats:
+      type: object
+      required: [totalMembers, activeMembers, totalTrainers, totalClasses, scheduledClassesToday, totalRevenue, revenueThisMonth, bookingsToday]
+      properties:
+        totalMembers:
+          type: integer
+        activeMembers:
+          type: integer
+        totalTrainers:
+          type: integer
+        totalClasses:
+          type: integer
+        scheduledClassesToday:
+          type: integer
+        totalRevenue:
+          type: number
+        revenueThisMonth:
+          type: number
+        bookingsToday:
+          type: integer
+        totalBranches:
+          type: integer
+        activeMemberships:
+          type: integer
+
+    ActivityItem:
+      type: object
+      required: [id, type, description, createdAt]
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        description:
+          type: string
+        entityId:
+          type: ["integer", "null"]
+        createdAt:
+          type: string
+
+    ClassUtilization:
+      type: object
+      required: [classId, className, totalSessions, totalBookings, avgUtilizationPercent]
+      properties:
+        classId:
+          type: integer
+        className:
+          type: string
+        category:
+          type: string
+        totalSessions:
+          type: integer
+        totalBookings:
+          type: integer
+        avgUtilizationPercent:
+          type: number
+
+    RevenueMonth:
+      type: object
+      required: [month, revenue, paymentCount]
+      properties:
+        month:
+          type: string
+        revenue:
+          type: number
+        paymentCount:
+          type: integer

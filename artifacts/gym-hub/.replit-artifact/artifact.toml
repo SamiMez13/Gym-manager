@@ -1,0 +1,28 @@
+kind = "web"
+previewPath = "/"
+title = "Gym Hub"
+description = "A full-stack gym management platform for gym owners, trainers, and members. Covers branch management, class scheduling and bookings, member profiles and memberships, trainer assignments, and payment/invoice tracking."
+version = "1.0.0"
+id = "artifacts/gym-hub"
+router = "path"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 18196
+
+[services.development]
+run = "pnpm --filter @workspace/gym-hub run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/gym-hub", "run", "build" ]
+serve = "static"
+publicDir = "artifacts/gym-hub/dist/public"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "18196"
+BASE_PATH = "/"
