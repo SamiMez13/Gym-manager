@@ -1,0 +1,1 @@
+- [Angular Replit host allowlist](angular-replit-hosts.md) — configure generated preview domains through Angular’s serve target, not a standalone Vite config.

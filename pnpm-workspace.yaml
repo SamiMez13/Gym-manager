@@ -75,6 +75,9 @@ onlyBuiltDependencies:
   - unrs-resolver
 
 overrides:
+  # Angular CLI's dependency tree requests tar@6.2.1, which is blocked by
+  # the workspace package firewall. Current tar remains API-compatible here.
+  tar: "^7.4.3"
   # replit uses linux-x64 only, we can exclude all other platforms
   "esbuild>@esbuild/darwin-arm64": "-"
   "esbuild>@esbuild/darwin-x64": "-"
