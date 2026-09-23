@@ -1,8 +1,8 @@
-from typing import Any, Dict, List
+from typing import Any, Dict
 from fastapi import APIRouter, Depends, HTTPException, Request, Response, status
 from sqlalchemy.orm import Session
 
-from app.core.database import get_db
+from app.database import get_db
 from app.services.gym_service import GymService
 from app.services.member_service import MemberService
 from app.services.booking_service import BookingService

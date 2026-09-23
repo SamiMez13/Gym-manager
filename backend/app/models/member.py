@@ -1,6 +1,6 @@
-from sqlalchemy import Boolean, Column, Date, Integer, String, Text
+from sqlalchemy import Boolean, Column, Date, Integer, String
 from sqlalchemy.orm import relationship
-from app.core.database import Base
+from app.database import Base
 from app.models.base import TimestampMixin
 
 class Member(Base, TimestampMixin):

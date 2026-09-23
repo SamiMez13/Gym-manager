@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Dict, Any
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
