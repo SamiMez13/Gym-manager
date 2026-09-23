@@ -1,6 +1,6 @@
 from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
-from app.core.database import Base
+from app.database import Base
 from app.models.base import TimestampMixin
 
 class Schedule(Base, TimestampMixin):

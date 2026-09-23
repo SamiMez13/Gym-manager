@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, Optional
+from typing import Optional
 from app.schemas.common import CamelModel
 
 class DashboardStats(CamelModel):

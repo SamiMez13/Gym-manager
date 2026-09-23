@@ -1,6 +1,6 @@
 from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import relationship
-from app.core.database import Base
+from app.database import Base
 from app.models.base import TimestampMixin
 
 class Trainer(Base, TimestampMixin):

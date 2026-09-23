@@ -2,9 +2,9 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.core.config import settings
-from app.core.database import engine, Base, SessionLocal
-from app.models import *  # Ensure all SQLAlchemy models are registered
+from app.config import settings
+from app.database import engine, Base, SessionLocal
+from app.models import *  # noqa: F401, F403 # Ensure all SQLAlchemy models are registered
 from app.seed_data import seed_database
 from app.routers.dashboard import router as dashboard_router
 from app.routers.seed import router as seed_router

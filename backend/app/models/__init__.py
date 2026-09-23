@@ -1,4 +1,4 @@
-from app.core.database import Base
+from app.database import Base
 from app.models.branch import Branch
 from app.models.trainer import Trainer
 from app.models.member import Member
