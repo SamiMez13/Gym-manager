@@ -1,0 +1,83 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Bookings"
+      eyebrow="RESERVATIONS"
+      subtitle="Track member enrollments, attendance statuses, and waitlists."
+      actionLabel="New Booking"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search bookings by member, class, status..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <article class="panel table-panel">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>MEMBER</th>
+              <th>CLASS</th>
+              <th>STATUS</th>
+              <th>BOOKED ON</th>
+              <th class="actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let booking of filteredBookings">
+              <td>
+                <strong>{{ booking.memberName || 'Member #' + booking.memberId }}</strong>
+              </td>
+              <td>{{ booking.className || 'Session #' + booking.scheduleId }}</td>
+              <td>
+                <ion-badge
+                  [color]="
+                    booking.status === 'confirmed' || booking.status === 'attended'
+                      ? 'success'
+                      : booking.status === 'waitlisted'
+                      ? 'warning'
+                      : 'medium'
+                  "
+                >
+                  {{ booking.status }}
+                </ion-badge>
+              </td>
+              <td>{{ displayDate(booking.createdAt) }}</td>
+              <td class="actions">
+                <ion-button fill="clear" size="small" (click)="openEdit(booking)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(booking)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && !filteredBookings.length">
+        No bookings found.
+      </div>
+      <div class="empty-state" *ngIf="loading">
+        Loading bookings…
+      </div>
+    </article>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Booking"
+    [isEditing]="!!editingBooking"
+    [fields]="fields"
+    [initialData]="editingBooking"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveBooking($event)"
+  ></app-entity-modal>
+</ion-content>

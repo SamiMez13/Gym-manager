@@ -1,0 +1,63 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Schedule"
+      eyebrow="TIMETABLE"
+      subtitle="Organize class sessions, instructor assignments, and room capacities."
+      actionLabel="Schedule Class"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search sessions by class, trainer, branch..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <div class="timeline" *ngIf="!loading && filteredSchedules.length">
+      <article class="schedule-card" *ngFor="let s of filteredSchedules">
+        <div class="big-time">
+          <strong>{{ displayTime(s.startTime) }}</strong>
+          <small>{{ displayTime(s.endTime) }}</small>
+        </div>
+
+        <div class="schedule-main">
+          <h3>{{ s.className || 'Gym Session' }}</h3>
+          <p>{{ s.trainerName || 'Trainer' }} · {{ s.branchName || 'Branch' }}</p>
+          <ion-badge color="light">
+            {{ s.currentBookings }}/{{ s.maxCapacity }} booked
+          </ion-badge>
+        </div>
+
+        <div class="actions">
+          <ion-button fill="clear" size="small" (click)="openEdit(s)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(s)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !filteredSchedules.length">
+      No sessions scheduled.
+    </div>
+    <div class="empty-state" *ngIf="loading">
+      Loading timetable…
+    </div>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Schedule Session"
+    [isEditing]="!!editingSchedule"
+    [fields]="fields"
+    [initialData]="editingSchedule"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveSchedule($event)"
+  ></app-entity-modal>
+</ion-content>

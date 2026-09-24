@@ -1,0 +1,69 @@
+.modal-content {
+  --background: #11161d;
+  color: #f0f4f8;
+}
+
+.dynamic-form {
+  padding: 8px 0;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  &.span-2 {
+    grid-column: span 2;
+    @media (max-width: 640px) {
+      grid-column: span 1;
+    }
+  }
+
+  ion-label {
+    font-size: 0.825rem;
+    font-weight: 600;
+    color: #94a3b8;
+
+    .required {
+      color: #ef4444;
+    }
+  }
+
+  ion-input, ion-textarea, ion-select {
+    --background: #1b232e;
+    --color: #ffffff;
+    --placeholder-color: #64748b;
+    --border-color: #2e3846;
+    --border-radius: 8px;
+    font-size: 0.9rem;
+  }
+
+  .toggle-wrapper {
+    padding: 8px 0;
+  }
+
+  .error {
+    color: #ef4444;
+    font-size: 0.75rem;
+    margin-top: 2px;
+  }
+}
+
+.save-button {
+  --background: #ff6b35;
+  --background-hover: #e85a26;
+  --border-radius: 8px;
+  font-weight: 700;
+  height: 44px;
+}

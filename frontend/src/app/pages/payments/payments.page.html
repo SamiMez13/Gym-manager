@@ -1,0 +1,87 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Payments"
+      eyebrow="FINANCIALS"
+      subtitle="Track transactions, membership billings, payment methods, and invoices."
+      actionLabel="Record Payment"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search payments by member, type, method..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <article class="panel table-panel">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>MEMBER</th>
+              <th>TYPE</th>
+              <th>METHOD</th>
+              <th>STATUS</th>
+              <th>AMOUNT</th>
+              <th>DATE</th>
+              <th class="actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let p of filteredPayments">
+              <td>
+                <strong>{{ p.memberName || 'Member #' + p.memberId }}</strong>
+              </td>
+              <td class="capitalize">{{ p.type }}</td>
+              <td class="capitalize">{{ p.method || '—' }}</td>
+              <td>
+                <ion-badge
+                  [color]="
+                    p.status === 'completed'
+                      ? 'success'
+                      : p.status === 'pending'
+                      ? 'warning'
+                      : 'danger'
+                  "
+                >
+                  {{ p.status }}
+                </ion-badge>
+              </td>
+              <td class="amount">${{ p.amount | number:'1.2-2' }}</td>
+              <td>{{ displayDate(p.createdAt) }}</td>
+              <td class="actions">
+                <ion-button fill="clear" size="small" (click)="openEdit(p)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(p)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && !filteredPayments.length">
+        No payment records found.
+      </div>
+      <div class="empty-state" *ngIf="loading">
+        Loading transactions…
+      </div>
+    </article>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Payment"
+    [isEditing]="!!editingPayment"
+    [fields]="fields"
+    [initialData]="editingPayment"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="savePayment($event)"
+  ></app-entity-modal>
+</ion-content>
