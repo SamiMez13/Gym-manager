@@ -1,0 +1,15 @@
+<div class="page-heading">
+  <div>
+    <p class="eyebrow" *ngIf="eyebrow">{{ eyebrow }}</p>
+    <h1>{{ title }}</h1>
+    <p class="subtitle" *ngIf="subtitle">{{ subtitle }}</p>
+  </div>
+  <ion-button
+    *ngIf="showAction && actionLabel"
+    class="primary-action"
+    (click)="onAction()"
+  >
+    <ion-icon [name]="actionIcon" slot="start"></ion-icon>
+    {{ actionLabel }}
+  </ion-button>
+</div>

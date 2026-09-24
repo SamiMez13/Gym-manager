@@ -1,127 +1,52 @@
 <ion-app>
-  <ion-menu #menu contentId="main-content" type="overlay">
-    <ion-header class="ion-no-border">
-      <ion-toolbar class="brand-toolbar">
-        <ion-title><span class="brand-mark">✦</span> GYM<span class="brand-accent">HUB</span></ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <div class="menu-caption">OPERATIONS</div>
-      <ion-list lines="none">
-        <ion-item
-          *ngFor="let item of navItems"
-          button
-          detail="false"
-          [class.active-nav]="activeSection === item.id"
-          (click)="selectSection(item.id); menu.close()"
-        >
-          <ion-icon [name]="item.icon" slot="start"></ion-icon>
-          <ion-label>{{ item.label }}</ion-label>
-        </ion-item>
-      </ion-list>
-      <div class="operator-card">
-        <div class="operator-avatar">OP</div>
-        <div><strong>Operator</strong><small>Admin access</small></div>
-      </div>
-    </ion-content>
-  </ion-menu>
+  <ion-split-pane contentId="main-content" when="md">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-header class="ion-no-border">
+        <ion-toolbar class="brand-toolbar">
+          <ion-title>
+            <span class="brand-mark">✦</span> GYM<span class="brand-accent">HUB</span>
+          </ion-title>
+        </ion-toolbar>
+      </ion-header>
 
-  <ion-content class="main-content" id="main-content">
-    <ion-header class="mobile-header">
-      <ion-toolbar>
-        <ion-buttons slot="start"><ion-menu-button></ion-menu-button></ion-buttons>
-        <ion-title>Gym Hub</ion-title>
-      </ion-toolbar>
-    </ion-header>
+      <ion-content>
+        <div class="menu-caption">OPERATIONS</div>
+        <ion-list lines="none">
+          <ion-menu-toggle autoHide="false" *ngFor="let item of navItems">
+            <ion-item
+              button
+              detail="false"
+              [routerLink]="item.path"
+              routerLinkActive="active-nav"
+              [routerLinkActiveOptions]="{ exact: item.path === '/dashboard' }"
+            >
+              <ion-icon [name]="item.icon" slot="start"></ion-icon>
+              <ion-label>{{ item.label }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
 
-    <main class="page-shell">
-      <section *ngIf="activeSection === 'dashboard'; else entityPage">
-        <div class="page-heading">
-          <div><p class="eyebrow">OPERATOR OVERVIEW</p><h1>Dashboard</h1><p>Everything happening across your gym, at a glance.</p></div>
-          <ion-chip color="light"><ion-icon name="calendar-outline"></ion-icon><ion-label>{{ today | date:'EEEE, MMM d, y' }}</ion-label></ion-chip>
-        </div>
-        <div class="metric-grid">
-          <article class="metric-card"><div class="metric-icon orange"><ion-icon name="cash-outline"></ion-icon></div><span>Total revenue</span><strong>${{ stats['totalRevenue'] || 0 | number:'1.2-2' }}</strong><small>Across all completed payments</small></article>
-          <article class="metric-card"><div class="metric-icon blue"><ion-icon name="people-outline"></ion-icon></div><span>Active members</span><strong>{{ stats['activeMembers'] || 0 }}</strong><small>Of {{ stats['totalMembers'] || 0 }} total members</small></article>
-          <article class="metric-card"><div class="metric-icon violet"><ion-icon name="fitness-outline"></ion-icon></div><span>Today's classes</span><strong>{{ stats['todaysClasses'] || 0 }}</strong><small>Scheduled for today</small></article>
-          <article class="metric-card"><div class="metric-icon green"><ion-icon name="ribbon-outline"></ion-icon></div><span>Active memberships</span><strong>{{ stats['activeMemberships'] || 0 }}</strong><small>Across {{ stats['branchCount'] || 0 }} branches</small></article>
-        </div>
-        <div class="dashboard-grid">
-          <article class="panel"><div class="panel-title"><div><h2>Today's schedule</h2><p>Upcoming sessions at every location</p></div><ion-button fill="clear" size="small" (click)="selectSection('schedule')">View all <ion-icon name="arrow-forward-outline" slot="end"></ion-icon></ion-button></div>
-            <div class="schedule-row" *ngFor="let row of data['schedules'] | slice:0:5"><div class="time-block"><strong>{{ displayTime(row.startTime) }}</strong><small>{{ displayTime(row.endTime) }}</small></div><div class="schedule-info"><strong>{{ row.className }}</strong><span>{{ row.trainerName }} · {{ row.branchName }}</span></div><ion-badge color="light">{{ row.currentBookings }}/{{ row.maxCapacity }}</ion-badge></div>
-            <div class="empty-state" *ngIf="!data['schedules']?.length">No sessions scheduled yet.</div>
-          </article>
-          <article class="panel accent-panel"><div class="panel-title"><div><h2>Quick actions</h2><p>Keep the floor moving</p></div></div>
-            <button class="quick-action" (click)="selectSection('members'); openCreate()"><ion-icon name="person-add-outline"></ion-icon><span><strong>Add a member</strong><small>Register a new gym member</small></span><ion-icon name="chevron-forward-outline"></ion-icon></button>
-            <button class="quick-action" (click)="selectSection('schedule'); openCreate()"><ion-icon name="calendar-number-outline"></ion-icon><span><strong>Schedule a class</strong><small>Put a session on the calendar</small></span><ion-icon name="chevron-forward-outline"></ion-icon></button>
-            <button class="quick-action" (click)="selectSection('payments'); openCreate()"><ion-icon name="receipt-outline"></ion-icon><span><strong>Record a payment</strong><small>Log a completed transaction</small></span><ion-icon name="chevron-forward-outline"></ion-icon></button>
-          </article>
-        </div>
-      </section>
-
-      <ng-template #entityPage>
-        <div class="page-heading">
-          <div><p class="eyebrow">GYM MANAGEMENT</p><h1>{{ currentTitle }}</h1><p>Manage {{ currentTitle.toLowerCase() }} and keep your operations up to date.</p></div>
-          <ion-button class="primary-action" (click)="openCreate()"><ion-icon name="add-outline" slot="start"></ion-icon>{{ activeSection === 'classes' ? 'New class type' : 'Add ' + currentTitle.slice(0, -1) }}</ion-button>
-        </div>
-        <div class="toolbar"><ion-searchbar [(ngModel)]="search" placeholder="Search {{ currentTitle.toLowerCase() }}" show-clear-button="focus"></ion-searchbar><ion-button fill="outline" size="small"><ion-icon name="filter-outline" slot="start"></ion-icon>Filters</ion-button></div>
-
-        <article class="panel table-panel" *ngIf="activeSection !== 'trainers' && activeSection !== 'classes' && activeSection !== 'branches' && activeSection !== 'schedule'">
-          <div class="table-scroll"><table><thead><tr>
-            <th *ngIf="activeSection === 'members'">MEMBER</th><th *ngIf="activeSection === 'members'">CONTACT</th><th *ngIf="activeSection === 'members'">STATUS</th><th *ngIf="activeSection === 'members'">JOINED</th>
-            <th *ngIf="activeSection === 'memberships'">MEMBER</th><th *ngIf="activeSection === 'memberships'">PLAN</th><th *ngIf="activeSection === 'memberships'">STATUS</th><th *ngIf="activeSection === 'memberships'">PERIOD</th>
-            <th *ngIf="activeSection === 'bookings'">MEMBER</th><th *ngIf="activeSection === 'bookings'">CLASS</th><th *ngIf="activeSection === 'bookings'">STATUS</th><th *ngIf="activeSection === 'bookings'">BOOKED ON</th>
-            <th *ngIf="activeSection === 'payments'">MEMBER</th><th *ngIf="activeSection === 'payments'">TYPE</th><th *ngIf="activeSection === 'payments'">METHOD</th><th *ngIf="activeSection === 'payments'">STATUS</th><th *ngIf="activeSection === 'payments'">AMOUNT</th>
-            <th>ACTIONS</th>
-          </tr></thead><tbody>
-            <tr *ngFor="let row of currentRows">
-              <ng-container [ngSwitch]="activeSection">
-                <ng-container *ngSwitchCase="'members'"><td><div class="person-cell"><span class="avatar">{{ row.firstName?.[0] }}{{ row.lastName?.[0] }}</span><strong>{{ row.firstName }} {{ row.lastName }}</strong></div></td><td>{{ row.email }}<small>{{ row.phone }}</small></td><td><ion-badge [color]="row.isActive ? 'success' : 'medium'">{{ row.isActive ? 'Active' : 'Inactive' }}</ion-badge></td><td>{{ displayDate(row.joinedAt) }}</td></ng-container>
-                <ng-container *ngSwitchCase="'memberships'"><td>{{ row.memberName }}</td><td>{{ row.planName }}</td><td><ion-badge [color]="row.status === 'active' ? 'success' : 'medium'">{{ row.status }}</ion-badge></td><td>{{ displayDate(row.startDate) }} — {{ displayDate(row.endDate) }}</td></ng-container>
-                <ng-container *ngSwitchCase="'bookings'"><td>{{ row.memberName }}</td><td>{{ row.className }}</td><td><ion-badge color="success">{{ row.status }}</ion-badge></td><td>{{ displayDate(row.createdAt) }}</td></ng-container>
-                <ng-container *ngSwitchCase="'payments'"><td>{{ row.memberName }}</td><td class="capitalize">{{ row.type }}</td><td class="capitalize">{{ row.method || '—' }}</td><td><ion-badge [color]="row.status === 'completed' ? 'success' : 'warning'">{{ row.status }}</ion-badge></td><td class="amount">${{ row.amount | number:'1.2-2' }}</td></ng-container>
-              </ng-container>
-              <td class="actions"><ion-button fill="clear" size="small" (click)="openEdit(row)"><ion-icon name="create-outline"></ion-icon></ion-button><ion-button fill="clear" color="danger" size="small" (click)="remove(row)"><ion-icon name="trash-outline"></ion-icon></ion-button></td>
-            </tr>
-          </tbody></table></div>
-          <div class="empty-state" *ngIf="!currentRows.length">No {{ currentTitle.toLowerCase() }} found.</div>
-        </article>
-
-        <div class="card-grid" *ngIf="activeSection === 'trainers' || activeSection === 'classes' || activeSection === 'branches'">
-          <article class="entity-card" *ngFor="let row of currentRows"><div class="card-top"><span class="avatar large" *ngIf="activeSection === 'trainers'">{{ row.firstName?.[0] }}{{ row.lastName?.[0] }}</span><ion-icon class="card-symbol" *ngIf="activeSection !== 'trainers'" [name]="activeSection === 'branches' ? 'business-outline' : 'fitness-outline'"></ion-icon><div><h3>{{ activeSection === 'trainers' ? row.firstName + ' ' + row.lastName : row.name }}</h3><ion-badge color="light">{{ activeSection === 'trainers' ? row.specialization : row.category || (row.isActive ? 'Active' : 'Inactive') }}</ion-badge></div><ion-button fill="clear" size="small" (click)="openEdit(row)"><ion-icon name="ellipsis-horizontal"></ion-icon></ion-button></div><p>{{ row.bio || row.description || row.address || 'No additional details provided.' }}</p><div class="card-meta"><span *ngIf="activeSection === 'trainers'">{{ row.email }}</span><span *ngIf="activeSection === 'branches'">{{ row.capacity }} capacity</span><span *ngIf="activeSection === 'classes'">{{ row.durationMinutes }} min · max {{ row.maxCapacity }}</span><span>{{ row.isActive ? 'Active' : 'Inactive' }}</span></div></article>
-        </div>
-
-        <div class="timeline" *ngIf="activeSection === 'schedule'"><article class="schedule-card" *ngFor="let row of currentRows"><div class="big-time"><strong>{{ displayTime(row.startTime) }}</strong><small>{{ displayTime(row.endTime) }}</small></div><div class="schedule-main"><h3>{{ row.className }}</h3><p>{{ row.trainerName }} · {{ row.branchName }}</p><ion-badge color="light">{{ row.currentBookings }}/{{ row.maxCapacity }} booked</ion-badge></div><div class="actions"><ion-button fill="clear" size="small" (click)="openEdit(row)"><ion-icon name="create-outline"></ion-icon></ion-button><ion-button fill="clear" color="danger" size="small" (click)="remove(row)"><ion-icon name="trash-outline"></ion-icon></ion-button></div></article></div>
-      </ng-template>
-    </main>
-  </ion-content>
-
-  <ion-modal [isOpen]="modalOpen" (didDismiss)="closeModal()">
-    <ng-template>
-      <ion-header><ion-toolbar><ion-title>{{ editingId ? 'Edit' : 'Create' }} {{ currentTitle.slice(0, -1) }}</ion-title><ion-buttons slot="end"><ion-button (click)="closeModal()">Close</ion-button></ion-buttons></ion-toolbar></ion-header>
-      <ion-content class="ion-padding modal-content">
-        <p class="modal-intro">Angular FormBuilder keeps this form typed, validated, and consistent across the admin hub.</p>
-        <form [formGroup]="form" (ngSubmit)="save()" class="dynamic-form">
-          <div class="form-grid">
-            <div *ngFor="let field of fields" class="form-field" [class.span-2]="field.span === 2">
-              <ion-label>{{ field.label }} <span *ngIf="field.required">*</span></ion-label>
-              <ng-container [ngSwitch]="field.type">
-                <ion-input *ngSwitchCase="'text'" [type]="field.type" [placeholder]="field.placeholder" [formControlName]="field.name" fill="outline"></ion-input>
-                <ion-input *ngSwitchCase="'email'" type="email" [placeholder]="field.placeholder" [formControlName]="field.name" fill="outline"></ion-input>
-                <ion-input *ngSwitchCase="'tel'" type="tel" [placeholder]="field.placeholder" [formControlName]="field.name" fill="outline"></ion-input>
-                <ion-input *ngSwitchCase="'number'" type="number" [placeholder]="field.placeholder" [formControlName]="field.name" fill="outline"></ion-input>
-                <ion-input *ngSwitchCase="'date'" type="date" [formControlName]="field.name" fill="outline"></ion-input>
-                <ion-input *ngSwitchCase="'datetime-local'" type="datetime-local" [formControlName]="field.name" fill="outline"></ion-input>
-                <ion-textarea *ngSwitchCase="'textarea'" [formControlName]="field.name" [placeholder]="field.placeholder" fill="outline" rows="3"></ion-textarea>
-                <ion-select *ngSwitchCase="'select'" [formControlName]="field.name" interface="popover" [placeholder]="'Select ' + field.label.toLowerCase()" fill="outline"><ion-select-option *ngFor="let option of field.options" [value]="option.value">{{ option.label }}</ion-select-option></ion-select>
-                <ion-toggle *ngSwitchCase="'toggle'" [formControlName]="field.name">Enabled</ion-toggle>
-              </ng-container>
-              <small class="error" *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched">{{ field.label }} is required.</small>
-            </div>
+        <div class="operator-card">
+          <div class="operator-avatar">OP</div>
+          <div>
+            <strong>Operator</strong>
+            <small>Admin access</small>
           </div>
-          <ion-button expand="block" type="submit" class="save-button" [disabled]="saving">{{ saving ? 'Saving…' : 'Save changes' }}</ion-button>
-        </form>
+        </div>
       </ion-content>
-    </ng-template>
-  </ion-modal>
+    </ion-menu>
+
+    <div class="ion-page" id="main-content">
+      <ion-header class="mobile-header ion-no-border">
+        <ion-toolbar class="brand-toolbar">
+          <ion-buttons slot="start">
+            <ion-menu-button></ion-menu-button>
+          </ion-buttons>
+          <ion-title>Gym Hub</ion-title>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-router-outlet id="main-content"></ion-router-outlet>
+    </div>
+  </ion-split-pane>
 </ion-app>

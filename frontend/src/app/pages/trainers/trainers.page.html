@@ -1,0 +1,67 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Trainers"
+      eyebrow="STAFF & COACHES"
+      subtitle="Manage instructors, specialties, certifications, and availability."
+      actionLabel="Add Trainer"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search trainers by name, specialty, email..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <div class="card-grid" *ngIf="!loading && filteredTrainers.length">
+      <article class="entity-card" *ngFor="let trainer of filteredTrainers">
+        <div class="card-top">
+          <span class="avatar large">
+            {{ trainer.firstName?.[0] }}{{ trainer.lastName?.[0] }}
+          </span>
+          <div>
+            <h3>{{ trainer.firstName }} {{ trainer.lastName }}</h3>
+            <ion-badge color="light">{{ trainer.specialization }}</ion-badge>
+          </div>
+          <ion-button fill="clear" size="small" (click)="openEdit(trainer)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(trainer)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <p>{{ trainer.bio || 'No biography provided.' }}</p>
+
+        <div class="card-meta">
+          <span>{{ trainer.email }}</span>
+          <span>{{ trainer.phone || 'No phone' }}</span>
+          <ion-badge [color]="trainer.isActive ? 'success' : 'medium'">
+            {{ trainer.isActive ? 'Active' : 'Inactive' }}
+          </ion-badge>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !filteredTrainers.length">
+      No trainers found.
+    </div>
+    <div class="empty-state" *ngIf="loading">
+      Loading trainers…
+    </div>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Trainer"
+    [isEditing]="!!editingTrainer"
+    [fields]="fields"
+    [initialData]="editingTrainer"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveTrainer($event)"
+  ></app-entity-modal>
+</ion-content>

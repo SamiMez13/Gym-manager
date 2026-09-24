@@ -1,0 +1,67 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Branches"
+      eyebrow="FACILITIES"
+      subtitle="Manage club locations, addresses, and physical floor capacities."
+      actionLabel="Add Branch"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search branches by name, location..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <div class="card-grid" *ngIf="!loading && filteredBranches.length">
+      <article class="entity-card" *ngFor="let branch of filteredBranches">
+        <div class="card-top">
+          <div class="card-symbol">
+            <ion-icon name="business-outline"></ion-icon>
+          </div>
+          <div>
+            <h3>{{ branch.name }}</h3>
+            <ion-badge color="light">Capacity: {{ branch.capacity || '—' }}</ion-badge>
+          </div>
+          <ion-button fill="clear" size="small" (click)="openEdit(branch)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(branch)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <p>{{ branch.address || 'No address specified.' }}</p>
+
+        <div class="card-meta">
+          <span>{{ branch.phone || 'No phone' }}</span>
+          <span>{{ branch.email || 'No email' }}</span>
+          <ion-badge [color]="branch.isActive ? 'success' : 'medium'">
+            {{ branch.isActive ? 'Active' : 'Inactive' }}
+          </ion-badge>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !filteredBranches.length">
+      No branches found.
+    </div>
+    <div class="empty-state" *ngIf="loading">
+      Loading branches…
+    </div>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Branch"
+    [isEditing]="!!editingBranch"
+    [fields]="fields"
+    [initialData]="editingBranch"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveBranch($event)"
+  ></app-entity-modal>
+</ion-content>

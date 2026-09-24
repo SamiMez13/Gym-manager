@@ -1,0 +1,120 @@
+<ion-modal [isOpen]="isOpen" (didDismiss)="onClose()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ isEditing ? 'Edit' : 'Create' }} {{ title }}</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="onClose()">Close</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <ion-content class="ion-padding modal-content">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="dynamic-form">
+        <div class="form-grid">
+          <div
+            *ngFor="let field of fields"
+            class="form-field"
+            [class.span-2]="field.span === 2"
+          >
+            <ion-label>
+              {{ field.label }}
+              <span *ngIf="field.required" class="required">*</span>
+            </ion-label>
+
+            <ng-container [ngSwitch]="field.type">
+              <ion-input
+                *ngSwitchCase="'text'"
+                type="text"
+                [placeholder]="field.placeholder || ''"
+                [formControlName]="field.name"
+                fill="outline"
+              ></ion-input>
+
+              <ion-input
+                *ngSwitchCase="'email'"
+                type="email"
+                [placeholder]="field.placeholder || ''"
+                [formControlName]="field.name"
+                fill="outline"
+              ></ion-input>
+
+              <ion-input
+                *ngSwitchCase="'tel'"
+                type="tel"
+                [placeholder]="field.placeholder || ''"
+                [formControlName]="field.name"
+                fill="outline"
+              ></ion-input>
+
+              <ion-input
+                *ngSwitchCase="'number'"
+                type="number"
+                [placeholder]="field.placeholder || ''"
+                [formControlName]="field.name"
+                fill="outline"
+              ></ion-input>
+
+              <ion-input
+                *ngSwitchCase="'date'"
+                type="date"
+                [formControlName]="field.name"
+                fill="outline"
+              ></ion-input>
+
+              <ion-input
+                *ngSwitchCase="'datetime-local'"
+                type="datetime-local"
+                [formControlName]="field.name"
+                fill="outline"
+              ></ion-input>
+
+              <ion-textarea
+                *ngSwitchCase="'textarea'"
+                [formControlName]="field.name"
+                [placeholder]="field.placeholder || ''"
+                fill="outline"
+                rows="3"
+              ></ion-textarea>
+
+              <ion-select
+                *ngSwitchCase="'select'"
+                [formControlName]="field.name"
+                interface="popover"
+                [placeholder]="'Select ' + field.label.toLowerCase()"
+                fill="outline"
+              >
+                <ion-select-option
+                  *ngFor="let option of field.options"
+                  [value]="option.value"
+                >
+                  {{ option.label }}
+                </ion-select-option>
+              </ion-select>
+
+              <div *ngSwitchCase="'toggle'" class="toggle-wrapper">
+                <ion-toggle [formControlName]="field.name">Active</ion-toggle>
+              </div>
+            </ng-container>
+
+            <small
+              class="error"
+              *ngIf="form.get(field.name)?.invalid && form.get(field.name)?.touched"
+            >
+              {{ field.label }} is required.
+            </small>
+          </div>
+        </div>
+
+        <ion-button
+          expand="block"
+          type="submit"
+          class="save-button"
+          [disabled]="saving"
+        >
+          {{ saving ? 'Saving…' : 'Save changes' }}
+        </ion-button>
+      </form>
+    </ion-content>
+  </ng-template>
+</ion-modal>

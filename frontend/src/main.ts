@@ -1,6 +1,7 @@
 import { bootstrapApplication } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { provideIonicAngular } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import {
@@ -22,10 +23,12 @@ import {
   peopleOutline,
   personAddOutline,
   receiptOutline,
+  refreshOutline,
   ribbonOutline,
   trashOutline,
 } from 'ionicons/icons';
 import { AppComponent } from './app/app.component';
+import { routes } from './app/app.routes';
 
 addIcons({
   'add-outline': addOutline,
@@ -46,10 +49,16 @@ addIcons({
   'people-outline': peopleOutline,
   'person-add-outline': personAddOutline,
   'receipt-outline': receiptOutline,
+  'refresh-outline': refreshOutline,
   'ribbon-outline': ribbonOutline,
   'trash-outline': trashOutline,
 });
 
 bootstrapApplication(AppComponent, {
-  providers: [provideAnimations(), provideHttpClient(withFetch()), provideIonicAngular()],
+  providers: [
+    provideAnimations(),
+    provideHttpClient(withFetch()),
+    provideIonicAngular(),
+    provideRouter(routes, withComponentInputBinding()),
+  ],
 }).catch((error) => console.error(error));

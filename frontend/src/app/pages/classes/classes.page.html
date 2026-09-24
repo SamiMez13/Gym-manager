@@ -1,0 +1,68 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Classes"
+      eyebrow="FITNESS PROGRAMS"
+      subtitle="Define group fitness sessions, difficulty tiers, and duration limits."
+      actionLabel="New Class Type"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search classes by name, category, difficulty..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <div class="card-grid" *ngIf="!loading && filteredClasses.length">
+      <article class="entity-card" *ngFor="let gymClass of filteredClasses">
+        <div class="card-top">
+          <div class="card-symbol">
+            <ion-icon name="fitness-outline"></ion-icon>
+          </div>
+          <div>
+            <h3>{{ gymClass.name }}</h3>
+            <ion-badge color="light">{{ gymClass.category || 'General' }}</ion-badge>
+          </div>
+          <ion-button fill="clear" size="small" (click)="openEdit(gymClass)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(gymClass)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+
+        <p>{{ gymClass.description || 'No description provided.' }}</p>
+
+        <div class="card-meta">
+          <span>{{ gymClass.durationMinutes }} mins</span>
+          <span>Max {{ gymClass.maxCapacity }} slots</span>
+          <span>{{ gymClass.difficultyLevel || 'All Levels' }}</span>
+          <ion-badge [color]="gymClass.isActive ? 'success' : 'medium'">
+            {{ gymClass.isActive ? 'Active' : 'Inactive' }}
+          </ion-badge>
+        </div>
+      </article>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !filteredClasses.length">
+      No classes found.
+    </div>
+    <div class="empty-state" *ngIf="loading">
+      Loading classes…
+    </div>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Class"
+    [isEditing]="!!editingClass"
+    [fields]="fields"
+    [initialData]="editingClass"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveClass($event)"
+  ></app-entity-modal>
+</ion-content>

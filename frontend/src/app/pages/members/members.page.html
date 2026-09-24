@@ -1,0 +1,83 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Members"
+      eyebrow="DIRECTORY"
+      subtitle="Manage gym members, personal details, and active statuses."
+      actionLabel="Add Member"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search members by name, email, phone..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <article class="panel table-panel">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>MEMBER</th>
+              <th>CONTACT</th>
+              <th>STATUS</th>
+              <th>JOINED</th>
+              <th class="actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let member of filteredMembers">
+              <td>
+                <div class="person-cell">
+                  <span class="avatar">
+                    {{ member.firstName?.[0] }}{{ member.lastName?.[0] }}
+                  </span>
+                  <strong>{{ member.firstName }} {{ member.lastName }}</strong>
+                </div>
+              </td>
+              <td>
+                {{ member.email }}
+                <small>{{ member.phone || 'No phone' }}</small>
+              </td>
+              <td>
+                <ion-badge [color]="member.isActive ? 'success' : 'medium'">
+                  {{ member.isActive ? 'Active' : 'Inactive' }}
+                </ion-badge>
+              </td>
+              <td>{{ displayDate(member.joinedAt) }}</td>
+              <td class="actions">
+                <ion-button fill="clear" size="small" (click)="openEdit(member)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(member)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && !filteredMembers.length">
+        No members found.
+      </div>
+      <div class="empty-state" *ngIf="loading">
+        Loading members…
+      </div>
+    </article>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Member"
+    [isEditing]="!!editingMember"
+    [fields]="fields"
+    [initialData]="editingMember"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveMember($event)"
+  ></app-entity-modal>
+</ion-content>

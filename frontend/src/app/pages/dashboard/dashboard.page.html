@@ -1,0 +1,135 @@
+<ion-content class="ion-padding page-content">
+  <div class="dashboard-header">
+    <div>
+      <p class="eyebrow">OPERATOR OVERVIEW</p>
+      <h1>Dashboard</h1>
+      <p class="subtitle">Everything happening across your gym, at a glance.</p>
+    </div>
+    <div class="header-actions">
+      <ion-chip color="light">
+        <ion-icon name="calendar-outline"></ion-icon>
+        <ion-label>{{ today | date:'EEEE, MMM d, y' }}</ion-label>
+      </ion-chip>
+      <ion-button fill="outline" size="small" (click)="seedData()">
+        <ion-icon name="refresh-outline" slot="start"></ion-icon>
+        Reset / Seed Data
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="metric-grid">
+    <article class="metric-card">
+      <div class="metric-icon orange">
+        <ion-icon name="cash-outline"></ion-icon>
+      </div>
+      <span>Total revenue</span>
+      <strong>${{ stats.totalRevenue || 0 | number:'1.2-2' }}</strong>
+      <small>Across all completed payments</small>
+    </article>
+
+    <article class="metric-card">
+      <div class="metric-icon blue">
+        <ion-icon name="people-outline"></ion-icon>
+      </div>
+      <span>Active members</span>
+      <strong>{{ stats.activeMembers || 0 }}</strong>
+      <small>Of {{ stats.totalMembers || 0 }} total members</small>
+    </article>
+
+    <article class="metric-card">
+      <div class="metric-icon violet">
+        <ion-icon name="fitness-outline"></ion-icon>
+      </div>
+      <span>Today's classes</span>
+      <strong>{{ stats.todaysClasses || 0 }}</strong>
+      <small>Scheduled for today</small>
+    </article>
+
+    <article class="metric-card">
+      <div class="metric-icon green">
+        <ion-icon name="ribbon-outline"></ion-icon>
+      </div>
+      <span>Active memberships</span>
+      <strong>{{ stats.activeMemberships || 0 }}</strong>
+      <small>Across {{ stats.branchCount || 0 }} branches</small>
+    </article>
+  </div>
+
+  <div class="dashboard-grid">
+    <article class="panel">
+      <div class="panel-title">
+        <div>
+          <h2>Today's schedule</h2>
+          <p>Upcoming sessions at every location</p>
+        </div>
+        <ion-button fill="clear" size="small" (click)="navigateTo('schedule')">
+          View all
+          <ion-icon name="arrow-forward-outline" slot="end"></ion-icon>
+        </ion-button>
+      </div>
+
+      <div class="schedule-list" *ngIf="todaySchedule.length">
+        <div class="schedule-row" *ngFor="let row of todaySchedule | slice:0:6">
+          <div class="time-block">
+            <strong>{{ displayTime(row.startTime) }}</strong>
+            <small>{{ displayTime(row.endTime) }}</small>
+          </div>
+          <div class="schedule-info">
+            <strong>{{ row.className }}</strong>
+            <span>{{ row.trainerName }} · {{ row.branchName }}</span>
+          </div>
+          <ion-badge color="light">{{ row.currentBookings }}/{{ row.maxCapacity }}</ion-badge>
+        </div>
+      </div>
+
+      <div class="empty-state" *ngIf="!todaySchedule.length">
+        No sessions scheduled for today.
+      </div>
+    </article>
+
+    <article class="panel accent-panel">
+      <div class="panel-title">
+        <div>
+          <h2>Quick actions</h2>
+          <p>Keep the floor moving</p>
+        </div>
+      </div>
+
+      <button class="quick-action" (click)="navigateTo('members')">
+        <ion-icon name="person-add-outline"></ion-icon>
+        <span>
+          <strong>Add a member</strong>
+          <small>Register a new gym member</small>
+        </span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+
+      <button class="quick-action" (click)="navigateTo('schedule')">
+        <ion-icon name="calendar-number-outline"></ion-icon>
+        <span>
+          <strong>Schedule a class</strong>
+          <small>Put a session on the calendar</small>
+        </span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+
+      <button class="quick-action" (click)="navigateTo('payments')">
+        <ion-icon name="receipt-outline"></ion-icon>
+        <span>
+          <strong>Record a payment</strong>
+          <small>Log a completed transaction</small>
+        </span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+
+      <button class="quick-action" (click)="navigateTo('bookings')">
+        <ion-icon name="clipboard-outline"></ion-icon>
+        <span>
+          <strong>Manage bookings</strong>
+          <small>Review attendance and enrollments</small>
+        </span>
+        <ion-icon name="chevron-forward-outline"></ion-icon>
+      </button>
+    </article>
+  </div>
+</ion-content>

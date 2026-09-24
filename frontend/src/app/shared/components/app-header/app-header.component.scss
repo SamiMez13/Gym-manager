@@ -1,0 +1,38 @@
+.page-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 16px;
+
+  .eyebrow {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    color: var(--ion-color-step-600, #ff6b35);
+    margin: 0 0 4px 0;
+  }
+
+  h1 {
+    font-size: 1.85rem;
+    font-weight: 800;
+    margin: 0 0 6px 0;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    font-size: 0.95rem;
+    color: #8f9ba8;
+    margin: 0;
+  }
+}
+
+.primary-action {
+  --background: #ff6b35;
+  --background-hover: #e85a26;
+  --color: #ffffff;
+  --border-radius: 10px;
+  font-weight: 600;
+  height: 42px;
+}

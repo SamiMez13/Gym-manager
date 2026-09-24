@@ -1,0 +1,75 @@
+<ion-content class="ion-padding page-content">
+  <div class="page-shell">
+    <app-header
+      title="Memberships"
+      eyebrow="SUBSCRIPTIONS"
+      subtitle="Manage active plans, pass expirations, and member contract periods."
+      actionLabel="Assign Plan"
+      (actionClick)="openCreate()"
+    ></app-header>
+
+    <div class="toolbar">
+      <ion-searchbar
+        [(ngModel)]="search"
+        placeholder="Search memberships by member or plan..."
+        show-clear-button="focus"
+      ></ion-searchbar>
+    </div>
+
+    <article class="panel table-panel">
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>MEMBER</th>
+              <th>PLAN</th>
+              <th>STATUS</th>
+              <th>PERIOD</th>
+              <th class="actions">ACTIONS</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let m of filteredMemberships">
+              <td>
+                <strong>{{ m.memberName || 'Member #' + m.memberId }}</strong>
+              </td>
+              <td>{{ m.planName || 'Plan #' + m.planId }}</td>
+              <td>
+                <ion-badge [color]="m.status === 'active' ? 'success' : 'medium'">
+                  {{ m.status }}
+                </ion-badge>
+              </td>
+              <td>{{ displayDate(m.startDate) }} — {{ displayDate(m.endDate) }}</td>
+              <td class="actions">
+                <ion-button fill="clear" size="small" (click)="openEdit(m)">
+                  <ion-icon name="create-outline"></ion-icon>
+                </ion-button>
+                <ion-button fill="clear" color="danger" size="small" (click)="confirmDelete(m)">
+                  <ion-icon name="trash-outline"></ion-icon>
+                </ion-button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="empty-state" *ngIf="!loading && !filteredMemberships.length">
+        No memberships found.
+      </div>
+      <div class="empty-state" *ngIf="loading">
+        Loading memberships…
+      </div>
+    </article>
+  </div>
+
+  <app-entity-modal
+    [isOpen]="modalOpen"
+    title="Membership"
+    [isEditing]="!!editingMembership"
+    [fields]="fields"
+    [initialData]="editingMembership"
+    [saving]="saving"
+    (dismiss)="closeModal()"
+    (save)="saveMembership($event)"
+  ></app-entity-modal>
+</ion-content>
